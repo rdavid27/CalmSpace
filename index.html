@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalmSpace - Mental Health Support Bot</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
+</head>
+<body>
+    <!-- Authentication Section -->
+    <div id="auth-container" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon">
+                    <i data-feather="heart"></i>
+                </div>
+                <h1>CalmSpace</h1>
+                <p>Your personal mental health companion</p>
+            </div>
+
+            <!-- Login Section (Step 6 Required) -->
+            <div id="loginSection" class="auth-form">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">Login</button>
+                </form>
+                
+                <div class="auth-toggle">
+                    <button id="showRegister" class="btn-link">Don't have an account? Register</button>
+                </div>
+            </div>
+
+            <!-- Register Section (Step 6 Required) -->
+            <div id="registerSection" class="auth-form" style="display: none;">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">Register</button>
+                </form>
+                
+                <div class="auth-toggle">
+                    <button id="showLogin" class="btn-link">Already have an account? Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Section (Step 6 Required: dashboardSection) -->
+    <div id="dashboardSection" class="app-container" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <i data-feather="heart"></i>
+                        <h1>CalmSpace</h1>
+                    </div>
+                    
+                    <nav class="nav desktop-nav">
+                        <button data-view="dashboard" class="nav-btn active">Dashboard</button>
+                        <button data-view="journal" class="nav-btn">Journal History</button>
+                        <button data-view="resources" class="nav-btn">Resources</button>
+                    </nav>
+                    
+                    <div class="user-menu">
+                        <button id="theme-toggle" class="btn-icon">
+                            <i data-feather="moon"></i>
+                        </button>
+                        
+                        <div class="user-info">
+                            <i data-feather="user"></i>
+                            <!-- Step 6 Required: userGreeting -->
+                            <span id="userGreeting">User</span>
+                        </div>
+                        
+                        <!-- Step 6 Required: logoutBtn -->
+                        <button id="logoutBtn" class="btn-icon">
+                            <i data-feather="log-out"></i>
+                        </button>
+                        
+                        <button id="mobile-menu-btn" class="btn-icon mobile-only">
+                            <i data-feather="menu"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Navigation -->
+                <nav id="mobile-nav" class="mobile-nav" style="display: none;">
+                    <button data-view="dashboard" class="nav-btn active">Dashboard</button>
+                    <button data-view="journal" class="nav-btn">Journal History</button>
+                    <button data-view="resources" class="nav-btn">Resources</button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Dashboard View -->
+                <div id="dashboard-view" class="view active">
+                    <div class="welcome-section">
+                        <h2>Welcome back, <span id="welcome-name">User</span>!</h2>
+                        <p>How are you feeling today?</p>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card blue">
+                            <i data-feather="book-open"></i>
+                            <div class="stat-info">
+                                <p>Journal Entries</p>
+                                <span id="total-entries">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card green">
+                            <i data-feather="trending-up"></i>
+                            <div class="stat-info">
+                                <p>Positive Days</p>
+                                <span id="positive-days">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card purple">
+                            <i data-feather="calendar"></i>
+                            <div class="stat-info">
+                                <p>Days Active</p>
+                                <span id="active-days">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Journal Entry Form (Step 6 Required) -->
+                    <div class="journal-form-card">
+                        <h3>Daily Check-in</h3>
+                        <form id="journalForm">
+                            <textarea 
+                                id="journalEntry" 
+                                placeholder="How are you feeling today? Share your thoughts, worries, or anything on your mind..."
+                                maxlength="1000"
+                                required
+                            ></textarea>
+                            <div class="form-footer">
+                                <span id="char-count">0/1000 characters</span>
+                                <button type="submit" id="submitJournal" class="btn btn-primary">
+                                    <i data-feather="send"></i>
+                                    Submit Entry
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 6 Required: analysisResult -->
+                    <div id="analysisResult" class="insights-card" style="display: none;">
+                        <h3>AI Analysis</h3>
+                        <div id="insights-content"></div>
+                    </div>
+
+                    <!-- Step 6 Required: recentEntries -->
+                    <div id="recentEntries" class="insights-card">
+                        <h3>Recent Entries</h3>
+                        <div id="recent-entries-content">
+                            <div class="empty-state">
+                                <i data-feather="book-open"></i>
+                                <p>No journal entries yet. Start by sharing how you're feeling!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Journal History View -->
+                <div id="journal-view" class="view">
+                    <h2>Journal History</h2>
+                    <div id="journal-entries">
+                        <div class="empty-state">
+                            <i data-feather="book-open"></i>
+                            <p>No journal entries yet. Start by sharing how you're feeling!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resources View (Step 6 Required: resources) -->
+                <div id="resources-view" class="view">
+                    <div id="resources">
+                        <h2>Mental Health Resources</h2>
+                        
+                        <div class="resources-grid">
+                            <div class="resource-card blue">
+                                <h3>Crisis Support</h3>
+                                <div class="resource-item">
+                                    <p><strong>National Suicide Prevention Lifeline</strong></p>
+                                    <p class="resource-link">988</p>
+                                </div>
+                                <div class="resource-item">
+                                    <p><strong>Crisis Text Line</strong></p>
+                                    <p class="resource-link">Text HOME to 741741</p>
+                                </div>
+                            </div>
+                            
+                            <div class="resource-card green">
+                                <h3>Campus Resources</h3>
+                                <div class="resource-item">
+                                    <p><strong>Student Counseling Center</strong></p>
+                                    <p class="resource-link">Available 24/7</p>
+                                </div>
+                                <div class="resource-item">
+                                    <p><strong>Wellness Programs</strong></p>
+                                    <p class="resource-link">Free group sessions</p>
+                                </div>
+                            </div>
+                            
+                            <div class="resource-card purple">
+                                <h3>Self-Care Tips</h3>
+                                <ul>
+                                    <li>Practice deep breathing exercises</li>
+                                    <li>Maintain a regular sleep schedule</li>
+                                    <li>Stay connected with friends and family</li>
+                                    <li>Exercise regularly, even just walking</li>
+                                    <li>Limit social media and news consumption</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="resource-card orange">
+                                <h3>Helpful Apps</h3>
+                                <ul>
+                                    <li>Headspace - Meditation and mindfulness</li>
+                                    <li>Calm - Sleep stories and relaxation</li>
+                                    <li>Youper - AI emotional health assistant</li>
+                                    <li>Sanvello - Anxiety and depression support</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Analyzing your entry...</p>
+    </div>
+
+    <script type="module">
+        // Import Firebase functions
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+        import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, where } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+        
+        // Make Firebase available globally
+        window.firebase = { initializeApp, getAuth, getFirestore, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, collection, addDoc, query, orderBy, limit, getDocs, where };
+    </script>
+    
+    <!-- Your main script -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
