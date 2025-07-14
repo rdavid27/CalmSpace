@@ -434,6 +434,139 @@ body.dark-mode {
     border-radius: 0.75rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
+    position: relative;
+}
+
+/* Scrollable insights content */
+.insights-content-scrollable {
+    max-height: 400px; /* Adjust this value based on your needs */
+    overflow-y: auto;
+    padding-right: 0.5rem; /* Space for scrollbar */
+    margin-bottom: 0.5rem;
+}
+
+/* Scrollable recent entries content */
+.recent-entries-scrollable {
+    max-height: 500px; /* Increased height to accommodate full content */
+    overflow-y: auto;
+    padding-right: 0.5rem; /* Space for scrollbar */
+    margin-bottom: 0.5rem;
+}
+
+/* Entry card styling for full content display */
+.entry-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.entry-card .entry-date {
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
+
+.entry-card .entry-text {
+    margin-bottom: 15px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.entry-card .entry-analysis {
+    font-size: 0.9em;
+    color: #555;
+    background-color: #e8f5e8;
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 4px solid #4CAF50;
+    white-space: pre-line;
+    line-height: 1.4;
+}
+
+/* Custom scrollbar styling for both scrollable areas */
+.insights-content-scrollable::-webkit-scrollbar,
+.recent-entries-scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+
+.insights-content-scrollable::-webkit-scrollbar-track,
+.recent-entries-scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.insights-content-scrollable::-webkit-scrollbar-thumb,
+.recent-entries-scrollable::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.insights-content-scrollable::-webkit-scrollbar-thumb:hover,
+.recent-entries-scrollable::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Firefox scrollbar styling */
+.insights-content-scrollable,
+.recent-entries-scrollable {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+/* Fade indicator for scrollable content */
+.insights-content-scrollable::after,
+.recent-entries-scrollable::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(transparent, white);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.insights-content-scrollable.has-overflow::after,
+.recent-entries-scrollable.has-overflow::after {
+    opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .insights-content-scrollable {
+        max-height: 300px; /* Smaller height on mobile */
+    }
+    
+    .recent-entries-scrollable {
+        max-height: 400px; /* Adjusted for mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .insights-content-scrollable {
+        max-height: 250px; /* Even smaller on very small screens */
+    }
+    
+    .recent-entries-scrollable {
+        max-height: 350px; /* Adjusted for very small screens */
+    }
+    
+    .entry-card {
+        padding: 12px;
+        margin: 8px 0;
+    }
+    
+    .entry-card .entry-analysis {
+        padding: 10px;
+        font-size: 0.85em;
+    }
 }
 
 .dark-mode .insights-card {

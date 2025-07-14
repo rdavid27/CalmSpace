@@ -19,15 +19,14 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
 
 // Your Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyCWS9fllI89PH43LwF-M2OgwEZ3TRzvgiA",
-    authDomain: "calmspace-5bee5.firebaseapp.com",
-    databaseURL: "https://calmspace-5bee5-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "calmspace-5bee5",
-    storageBucket: "calmspace-5bee5.firebasestorage.app",
-    messagingSenderId: "682446933114",
-    appId: "1:682446933114:web:633dfa31d77dc5340f7fc3"
-};
+ const firebaseConfig = {
+    apiKey: "AIzaSyAsoc3X4DKln08Zq5VW20w0oFlF50KT6O4",
+    authDomain: "calmspace-192cb.firebaseapp.com",
+    projectId: "calmspace-192cb",
+    storageBucket: "calmspace-192cb.firebasestorage.app",
+    messagingSenderId: "840184504425",
+    appId: "1:840184504425:web:84e6360386db61ee4942f8"
+  };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -35,8 +34,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // Gemini API Configuration
-const GEMINI_API_KEY = 'AIzaSyC97zovDTZlRkdsmpwLAmO0FVmXSdSnt8w';
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+const GEMINI_API_KEY = 'AIzaSyAbZwZKTt9EcZZN3qwwsFOPXJZ3qPdvuGU';
+// Try this updated endpoint
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
 // DOM Elements
 const loginForm = document.getElementById('loginForm');
@@ -122,15 +122,52 @@ async function analyzeJournalEntry(entry) {
                     parts: [{
                         text: prompt
                     }]
-                }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 1024,
+                },
+                safetySettings: [
+                    {
+                        category: "HARM_CATEGORY_HARASSMENT",
+                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                    },
+                    {
+                        category: "HARM_CATEGORY_HATE_SPEECH",
+                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                    },
+                    {
+                        category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                    },
+                    {
+                        category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                    }
+                ]
             })
         });
 
         if (!response.ok) {
-            throw new Error('Failed to analyze journal entry');
+            const errorData = await response.json().catch(() => ({}));
+            console.error('API Error:', {
+                status: response.status,
+                statusText: response.statusText,
+                error: errorData
+            });
+            throw new Error(`API request failed: ${response.status}`);
         }
 
         const data = await response.json();
+        
+        // Check if the response has the expected structure
+        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts) {
+            console.error('Unexpected API response structure:', data);
+            throw new Error('Invalid API response structure');
+        }
+        
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
         console.error('Gemini API error:', error);
@@ -232,37 +269,49 @@ function showSuccess(message, elementId) {
 }
 
 async function displayRecentEntries() {
-    if (!recentEntries) return;
+    const recentEntriesContainer = document.getElementById('recent-entries-content');
+    if (!recentEntriesContainer) return;
     
     const entries = await getRecentEntries();
     
     if (entries.length === 0) {
-        recentEntries.innerHTML = '<p>No recent entries. Start journaling to see your entries here!</p>';
+        recentEntriesContainer.innerHTML = `
+            <div class="empty-state">
+                <i data-feather="book-open"></i>
+                <p>No recent entries. Start journaling to see your entries here!</p>
+            </div>
+        `;
         return;
     }
     
-    recentEntries.innerHTML = '<h3>Recent Entries</h3>';
+    // Clear container and add header
+    recentEntriesContainer.innerHTML = '<h3>Recent Entries</h3>';
     
     entries.forEach(entry => {
         const entryDiv = document.createElement('div');
         entryDiv.className = 'entry-card';
-        entryDiv.style.cssText = `
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        `;
         
-        const date = new Date(entry.timestamp.seconds * 1000).toLocaleDateString();
+        const date = new Date(entry.timestamp.seconds * 1000).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
         entryDiv.innerHTML = `
-            <div style="font-weight: bold; color: #666; margin-bottom: 5px;">${date}</div>
-            <div style="margin-bottom: 10px;">${entry.entry.substring(0, 100)}${entry.entry.length > 100 ? '...' : ''}</div>
-            <div style="font-size: 0.9em; color: #888;">${entry.analysis.substring(0, 150)}${entry.analysis.length > 150 ? '...' : ''}</div>
+            <div class="entry-date">${date}</div>
+            <div class="entry-text">${entry.entry}</div>
+            <div class="entry-analysis">${entry.analysis}</div>
         `;
         
-        recentEntries.appendChild(entryDiv);
+        recentEntriesContainer.appendChild(entryDiv);
     });
+    
+    // Re-initialize feather icons for any new icons
+    if (window.feather) {
+        feather.replace();
+    }
 }
 
 // Event Listeners
